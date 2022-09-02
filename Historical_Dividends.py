@@ -66,7 +66,6 @@ def insert_data(data):
         cursor.close()
 
 if __name__ == '__main__':
-
     if(check_table()):
         clear_data()
     else:
@@ -80,20 +79,20 @@ if __name__ == '__main__':
     cols = cols[-1:] + cols[:-1]
     df = df[cols]
     insert_data(df.values.tolist())
-    
+
     # symbol = select_symbol()
     # df = pd.DataFrame()
     # for i in symbol:
 
-    # ticker = i
-    # r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
-    # if (bool(r.json())):
-    #     df2 = pd.json_normalize(r.json()['historical'])
-    #     df2['symbol'] = ticker
-    #     cols = df2.columns.tolist()
-    #     cols = cols[-1:] + cols[:-1]
-    #     df2 = df2[cols]
-    #     df = pd.concat([df, df2])
+        # ticker = i
+        # r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+        # if (bool(r.json())):
+        #     df2 = pd.json_normalize(r.json()['historical'])
+        #     df2['symbol'] = ticker
+        #     cols = df2.columns.tolist()
+        #     cols = cols[-1:] + cols[:-1]
+        #     df2 = df2[cols]
+        #     df = pd.concat([df, df2])
 
     
     
