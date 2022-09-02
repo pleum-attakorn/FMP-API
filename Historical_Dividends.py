@@ -3,7 +3,7 @@ import requests
 import pyodbc
 import database
 
-api_key = pd.read_csv('./key.txt', header=None)[0][0]
+api_key = pd.read_csv('../key.txt', header=None)[0][0]
 URL = 'https://financialmodelingprep.com/api/v3/'
 data = 'historical-price-full/stock_dividend/'
 
@@ -25,10 +25,11 @@ def select_symbol():
 
 if __name__ == '__main__':
 
-    #symbol = select_symbol()
+    symbol = select_symbol()
     ticker = 'AAPL'
-    r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
-    print(bool(r.json()))
+    print(symbol[0])
+    #r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+    #print(bool(r.json()))
     # df2 = pd.json_normalize(r.json()['historical'])
     # df2['symbol'] = ticker
     # cols = df2.columns.tolist()

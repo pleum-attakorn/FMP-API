@@ -3,7 +3,7 @@ import requests
 import pyodbc
 import database
 
-api_key = pd.read_csv('./key.txt', header=None)[0][0]
+api_key = pd.read_csv('../key.txt', header=None)[0][0]
 URL = 'https://financialmodelingprep.com/api/v3/'
 data = 'delisted-companies'
 #page = 0
