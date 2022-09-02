@@ -72,16 +72,28 @@ if __name__ == '__main__':
     else:
         create_table()
     
-    #symbol = select_symbol()
-    #print(bool(r.json()))
     ticker = 'AAPL'
     r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
-    
-    df2 = pd.json_normalize(r.json()['historical'])
-    df2['symbol'] = ticker
-    cols = df2.columns.tolist()
+    df = pd.json_normalize(r.json()['historical'])
+    df['symbol'] = ticker
+    cols = df.columns.tolist()
     cols = cols[-1:] + cols[:-1]
-    df2 = df2[cols]
-    #print(df2)
-    insert_data(df2.values.tolist())
+    df = df[cols]
+    insert_data(df.values.tolist())
+    
+    # symbol = select_symbol()
+    # df = pd.DataFrame()
+    # for i in symbol:
+
+    # ticker = i
+    # r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+    # if (bool(r.json())):
+    #     df2 = pd.json_normalize(r.json()['historical'])
+    #     df2['symbol'] = ticker
+    #     cols = df2.columns.tolist()
+    #     cols = cols[-1:] + cols[:-1]
+    #     df2 = df2[cols]
+    #     df = pd.concat([df, df2])
+
+    
     
