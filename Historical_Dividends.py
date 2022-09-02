@@ -22,18 +22,66 @@ def select_symbol():
         cursor.close()
         return lst
     
+def create_table():
+    sql = '''
+        CREATE TABLE Historical_Dividend (symbol varchar(255),y_m_d DATE, label varchar(255), adjDividend FLOAT(6), dividend FLOAT(2),
+        recordDate DATE, paymentDate DATE, declarationDate DATE)
+    '''
+    with pyodbc.connect(con_str) as con:
+        cursor = con.cursor()
+        cursor.execute(sql)
+        cursor.close()
+
+def check_table():
+    sql = '''
+        SELECT COUNT(*) FROM information_schema.tables
+        WHERE table_name = 'Historical_Dividend'
+    '''
+    with pyodbc.connect(con_str) as con:
+        cursor = con.cursor()
+        cursor.execute(sql)
+        if cursor.fetchone()[0] == 1:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
+
+def clear_data():
+    sql = '''
+        DELETE FROM Historical_Dividend
+    '''
+    with pyodbc.connect(con_str) as con:
+        cursor = con.cursor()
+        cursor.execute(sql)
+        cursor.close()
+
+def insert_data(data):
+    sql = '''
+        INSERT INTO Historical_Dividend VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    '''
+    with pyodbc.connect(con_str) as con:
+        cursor = con.cursor()
+        cursor.executemany(sql, data)
+        cursor.close()
 
 if __name__ == '__main__':
 
-    symbol = select_symbol()
-    ticker = 'AAPL'
-    print(symbol[0])
-    #r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+    if(check_table()):
+        clear_data()
+    else:
+        create_table()
+    
+    #symbol = select_symbol()
     #print(bool(r.json()))
-    # df2 = pd.json_normalize(r.json()['historical'])
-    # df2['symbol'] = ticker
-    # cols = df2.columns.tolist()
-    # cols = cols[-1:] + cols[:-1]
-    # df2 = df2[cols]
-    # print(df2)
+    ticker = 'AAPL'
+    r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+    
+    df2 = pd.json_normalize(r.json()['historical'])
+    df2['symbol'] = ticker
+    cols = df2.columns.tolist()
+    cols = cols[-1:] + cols[:-1]
+    df2 = df2[cols]
+    #print(df2)
+    insert_data(df2.values.tolist())
     
