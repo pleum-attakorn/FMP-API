@@ -66,33 +66,39 @@ def insert_data(data):
         cursor.close()
 
 if __name__ == '__main__':
+
     if(check_table()):
         clear_data()
     else:
         create_table()
     
-    ticker = 'AAPL'
-    r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
-    df = pd.json_normalize(r.json()['historical'])
-    df['symbol'] = ticker
-    cols = df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    df = df[cols]
+    # ticker = 'AAPL'
+    # r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+    # df = pd.json_normalize(r.json()['historical'])
+    # df['symbol'] = ticker
+    # cols = df.columns.tolist()
+    # cols = cols[-1:] + cols[:-1]
+    # df = df[cols]
+    # insert_data(df.values.tolist())
+
+    symbol = select_symbol()
+    count = 0
+    df = pd.DataFrame()    
+    for i in symbol:
+        if count >= 10:
+            break
+        ticker = i
+        r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
+        if (bool(r.json())):
+            df2 = pd.json_normalize(r.json()['historical'])
+            df2['symbol'] = ticker
+            cols = df2.columns.tolist()
+            cols = cols[-1:] + cols[:-1]
+            df2 = df2[cols]
+            df = pd.concat([df, df2])
+        count = count + 1
+    df.reset_index(drop=True, inplace=True)
     insert_data(df.values.tolist())
-
-    # symbol = select_symbol()
-    # df = pd.DataFrame()
-    # for i in symbol:
-
-        # ticker = i
-        # r = requests.get('{}{}{}?apikey={}'.format(URL, data, ticker, api_key))
-        # if (bool(r.json())):
-        #     df2 = pd.json_normalize(r.json()['historical'])
-        #     df2['symbol'] = ticker
-        #     cols = df2.columns.tolist()
-        #     cols = cols[-1:] + cols[:-1]
-        #     df2 = df2[cols]
-        #     df = pd.concat([df, df2])
 
     
     
